@@ -1,0 +1,8 @@
+Nov 18 10:00:01 lab-server sshd[1201]: Accepted publickey for analyst from 192.0.2.10 port 51234 ssh2
+Nov 18 10:01:15 lab-server sshd[1202]: Failed password for root from 198.51.100.25 port 45123 ssh2
+Nov 18 10:01:20 lab-server sshd[1203]: Failed password for root from 198.51.100.25 port 45124 ssh2
+Nov 18 10:01:25 lab-server sshd[1204]: Invalid user admin from 198.51.100.25 port 45125
+Nov 18 10:02:10 lab-server sshd[1205]: Accepted password for root from 198.51.100.25 port 45126 ssh2
+Nov 18 10:03:00 lab-server sudo[1301]: analyst : TTY=pts/0 ; PWD=/home/analyst ; USER=root ; COMMAND=/usr/bin/id
+Nov 18 10:03:01 lab-server sudo[1301]: pam_unix(sudo:session): session opened for user root(uid=0) by analyst(uid=1000)
+Nov 18 10:03:05 lab-server sudo[1301]: pam_unix(sudo:session): session closed for user root

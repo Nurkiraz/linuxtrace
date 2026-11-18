@@ -14,9 +14,11 @@ historical Linux activity.
 
 ## Current Development Status
 
-Version: 0.1.0
+Version: 0.2.0
 
-Phase 1 - Initial architecture and system discovery.
+Phase 2 - Authentication and Journal Collectors.
+
+112 automated tests passed.
 
 ## Implemented Features
 
@@ -29,6 +31,17 @@ Phase 1 - Initial architecture and system discovery.
 - Evidence root boundary checks in log discovery
 - Rich terminal interface
 - Automated unit tests
+- Streaming log collection
+- Gzip log reading
+- Authentication log collection
+- SSH authentication analysis
+- PAM session analysis
+- Sudo authorization analysis
+- Systemd journal collection
+- Journal metadata extraction
+- Record-level SHA-256 hashing
+- Authentication event classification
+- Integration test suite
 
 ## Installation
 

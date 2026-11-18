@@ -41,6 +41,12 @@ evidence/
 !tests/fixtures/**/*.log
 !examples/**/*.log
 
+# Allow synthetic forensic evidence fixtures
+!tests/fixtures/evidence/
+!tests/fixtures/evidence/**/
+!tests/fixtures/evidence/**/*.log
+
+
 # Temporary files
 *.tmp
 *.swp
