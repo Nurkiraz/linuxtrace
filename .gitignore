@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environment
+.venv/
+venv/
+
+# Test and lint
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.*
+
+# LinuxTrace analysis data
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+*.sqlite-wal
+*.sqlite-shm
+cases/
+reports/
+exports/
+evidence/
+*.log
+
+# Allow synthetic test and demo logs
+!tests/fixtures/**/*.log
+!examples/**/*.log
+
+# Temporary files
+*.tmp
+*.swp
