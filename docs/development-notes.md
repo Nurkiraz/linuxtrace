@@ -137,3 +137,37 @@ All 112 tests passed.
 ### Next Phase
 
 Event normalization and SQLite event storage.
+
+## Phase 3 - Event Normalization and SQLite Storage
+
+### Implemented
+- NormalizedEvent forensic data model
+- UTC timestamp normalization
+- Timestamp confidence and ambiguity reporting
+- Deterministic SHA-256 event identifiers
+- SQLite event persistence and indexes
+- Parameterized event queries and pagination
+- Event ID duplicate prevention
+- Possible duplicate candidate detection
+- Incremental file tracking using SHA-256
+- SQLite transaction rollback on collection failures
+- Authentication collection integration
+
+### Verification
+- 179 automated tests passed
+- Synthetic authentication evidence processed
+- Eight events persisted in SQLite
+- Unchanged source files skipped on subsequent collection
+- Changed-source rollback behavior tested
+
+### Known Limitations
+- Possible duplicate detection does not merge evidence
+- Incremental collection still hashes entire source files
+- No atomic source file snapshot or complete TOCTOU protection
+- No complete evidence manifest
+- SQLite schema migration framework not yet implemented
+- Full offline journal collection is not implemented
+- Partial journal access can limit investigation coverage
+
+### Next Phase
+Timeline CLI and forensic event inspection.

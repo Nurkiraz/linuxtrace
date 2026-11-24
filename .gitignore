@@ -50,3 +50,8 @@ evidence/
 # Temporary files
 *.tmp
 *.swp
+
+# Local development backups and databases
+*.py.bak
+*.bak
+data/

@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.3.0] - 2026-11-24
+
+### Added
+- Normalized forensic event model
+- UTC timestamp normalization
+- Timestamp confidence and warnings
+- Deterministic event identifiers
+- SQLite event storage and indexes
+- Event filtering and pagination
+- Possible duplicate detection
+- Incremental collection tracking
+- Atomic SQLite collection transactions
+- Additional automated and integration tests
+
+### Known Limitations
+- Full forensic snapshot integrity is not yet guaranteed
+- Incremental collection reads source files for hashing
+
+
+
 ## [0.1.0] - 2026-11-18
 
 ### Added
