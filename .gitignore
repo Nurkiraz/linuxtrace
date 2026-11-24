@@ -55,3 +55,6 @@ evidence/
 *.py.bak
 *.bak
 data/
+
+/data/
+/reports/
