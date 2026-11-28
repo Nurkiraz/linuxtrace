@@ -3,6 +3,7 @@
 import sqlite3
 from collections.abc import Iterable
 from contextlib import closing
+from datetime import timedelta
 from ipaddress import ip_address
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -23,11 +24,16 @@ SSH_EVENT_TYPES = frozenset(
 
 
 def _run_ssh_groups(connection, rules, config):
-    """Process one SSH source group at a time."""
+    """Process SSH groups and split at safe inactivity gaps."""
 
     findings = []
     current_key = None
+    last_timestamp = None
     group = []
+
+    max_window = timedelta(
+        minutes=max(getattr(config, rule.config_key).window_minutes for rule in rules)
+    )
 
     def flush():
         if not group:
@@ -54,13 +60,23 @@ def _run_ssh_groups(connection, rules, config):
     )
 
     for hostname, source_ip, event_json in cursor:
+        event = NormalizedEvent.model_validate_json(event_json)
         key = (hostname, source_ip)
 
-        if current_key is not None and key != current_key:
+        source_changed = current_key is not None and key != current_key
+
+        inactive = (
+            not source_changed
+            and last_timestamp is not None
+            and event.timestamp - last_timestamp > max_window
+        )
+
+        if source_changed or inactive:
             flush()
 
         current_key = key
-        group.append(NormalizedEvent.model_validate_json(event_json))
+        last_timestamp = event.timestamp
+        group.append(event)
 
     flush()
     return findings
