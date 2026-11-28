@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.5.0] - Unreleased
+
+### Added
+- Syslog, Kernel, and Cron log collectors.
+- Incremental Syslog collection using SHA-256 fingerprints.
+- Rotated and gzip-compressed log support.
+- Auditd parsing and event correlation.
+- SQLite storage for normalized audit events.
+- Preservation of original audit evidence.
+- Audit evidence inspection through the CLI.
+- UTC timestamp normalization for audit events.
+- Disk-backed audit grouping for improved memory usage.
+
+### Reliability
+- Transactional event and evidence storage.
+- Rollback on supported collection failures.
+- Source integrity and SHA-256 verification.
+- Additional security and integration tests.
+
 ## [0.3.0] - 2026-11-24
 
 ### Added

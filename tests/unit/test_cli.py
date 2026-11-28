@@ -1,5 +1,6 @@
 from typer.testing import CliRunner
 
+from linuxtrace import __version__
 from linuxtrace.cli import app
 
 runner = CliRunner()
@@ -10,7 +11,7 @@ def test_version_command():
 
     assert result.exit_code == 0
     assert "LinuxTrace" in result.output
-    assert "0.4.0" in result.output
+    assert __version__ in result.output
 
 
 def test_help_command():

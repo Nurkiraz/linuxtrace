@@ -1,0 +1,2 @@
+Nov 18 10:01:15 lab-server CROND[1402]: (root) CMD (/usr/local/bin/backup.sh)
+Nov 18 10:05:15 lab-server CROND[1403]: (root) CMD (/usr/local/bin/cleanup.sh)

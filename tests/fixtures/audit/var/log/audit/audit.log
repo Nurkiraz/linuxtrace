@@ -1,0 +1,5 @@
+type=SYSCALL msg=audit(1794996001.123:450): arch=c000003e syscall=59 success=yes pid=1200 uid=1000 auid=1000 comm="cat" exe="/usr/bin/cat"
+type=EXECVE msg=audit(1794996001.123:450): argc=2 a0="cat" a1="/etc/hosts"
+type=CWD msg=audit(1794996001.123:450): cwd="/home/analyst"
+type=PATH msg=audit(1794996001.123:450): item=0 name="/etc/hosts" nametype=NORMAL
+type=USER_LOGIN msg=audit(1794996010.456:451): pid=1400 uid=0 auid=1000 acct="analyst" res=success

@@ -1,0 +1,5 @@
+Nov 18 10:00:01 lab-server systemd[1]: Started Daily Cleanup Service.
+Nov 18 10:01:15 lab-server CRON[1402]: (root) CMD (/usr/local/bin/backup.sh)
+Nov 18 10:02:10 lab-server kernel: [12345.678901] eth0: link down
+Nov 18 10:03:20 lab-server systemd[1]: backup.service: Failed with result 'exit-code'.
+Nov 18 10:04:30 lab-server rsyslogd[812]: rsyslogd was HUPed

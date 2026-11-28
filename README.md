@@ -102,3 +102,9 @@ log source can be successfully collected.
 ## License
 
 MIT License.
+
+## Phase 5 Documentation
+
+Learn about Syslog, Kernel, Cron, and Auditd collection:
+
+- [System Log Collection and Auditd Analysis](docs/phase5.md)
