@@ -39,25 +39,55 @@ def run_ssh_detections(
             },
         )
 
-    materialized = list(events)
     findings = []
+    ssh_events = []
+    audit_batch = []
+    audit_batch_size = 500
 
-    for rule in get_registered_rules():
+    enabled_rules = [
+        rule for rule in get_registered_rules() if getattr(config, rule.config_key).enabled
+    ]
+
+    ssh_rules = [rule for rule in enabled_rules if rule.uses_window]
+    audit_rules = [rule for rule in enabled_rules if not rule.uses_window]
+
+    def process_audit_batch():
+        if not audit_batch:
+            return
+
+        for rule in audit_rules:
+            findings.extend(rule.detector(audit_batch))
+
+        audit_batch.clear()
+
+    for event in events:
+        if event.event_type == "audit_syscall":
+            if audit_rules:
+                audit_batch.append(event)
+
+                if len(audit_batch) >= audit_batch_size:
+                    process_audit_batch()
+
+        elif event.event_type in {
+            "ssh_login_failed",
+            "ssh_invalid_user",
+            "ssh_login_success",
+        }:
+            if ssh_rules:
+                ssh_events.append(event)
+
+    process_audit_batch()
+
+    for rule in ssh_rules:
         settings = getattr(config, rule.config_key)
 
-        if not settings.enabled:
-            continue
-
-        if rule.uses_window:
-            findings.extend(
-                rule.detector(
-                    materialized,
-                    threshold=settings.threshold,
-                    window_minutes=settings.window_minutes,
-                )
+        findings.extend(
+            rule.detector(
+                ssh_events,
+                threshold=settings.threshold,
+                window_minutes=settings.window_minutes,
             )
-        else:
-            findings.extend(rule.detector(materialized))
+        )
 
     return sorted(
         findings,
