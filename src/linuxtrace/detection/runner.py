@@ -11,6 +11,9 @@ from tempfile import TemporaryDirectory
 from linuxtrace.detection.config import DetectionConfig
 from linuxtrace.detection.models import SecurityFinding
 from linuxtrace.detection.registry import get_registered_rules
+from linuxtrace.detection.ssh_bruteforce import FAILED_TYPES
+from linuxtrace.detection.ssh_bruteforce_state import SSHBruteForceState
+from linuxtrace.detection.ssh_correlation_state import SSHSuccessCorrelationState
 from linuxtrace.models.normalized_event import NormalizedEvent
 
 AUDIT_BATCH_SIZE = 500
@@ -24,22 +27,37 @@ SSH_EVENT_TYPES = frozenset(
 
 
 def _run_ssh_groups(connection, rules, config):
-    """Process SSH groups and split at safe inactivity gaps."""
+    """Execute stateful SSH rules and legacy group-based rules."""
 
     findings = []
     current_key = None
     last_timestamp = None
     group = []
 
+    stateful_ids = {"LT-SSH-001", "LT-SSH-002"}
+
+    brute_rule = next(
+        (rule for rule in rules if rule.rule_id == "LT-SSH-001"),
+        None,
+    )
+    correlation_rule = next(
+        (rule for rule in rules if rule.rule_id == "LT-SSH-002"),
+        None,
+    )
+    other_rules = [rule for rule in rules if rule.rule_id not in stateful_ids]
+
     max_window = timedelta(
         minutes=max(getattr(config, rule.config_key).window_minutes for rule in rules)
     )
+
+    brute_state = None
+    correlation_state = None
 
     def flush():
         if not group:
             return
 
-        for rule in rules:
+        for rule in other_rules:
             settings = getattr(config, rule.config_key)
             findings.extend(
                 rule.detector(
@@ -55,6 +73,11 @@ def _run_ssh_groups(connection, rules, config):
         """
         SELECT hostname, source_ip, event_json
         FROM ssh_events
+        WHERE rowid IN (
+            SELECT MAX(rowid)
+            FROM ssh_events
+            GROUP BY hostname, source_ip, event_id
+        )
         ORDER BY hostname, source_ip, timestamp, event_id
         """
     )
@@ -64,7 +87,6 @@ def _run_ssh_groups(connection, rules, config):
         key = (hostname, source_ip)
 
         source_changed = current_key is not None and key != current_key
-
         inactive = (
             not source_changed
             and last_timestamp is not None
@@ -73,10 +95,43 @@ def _run_ssh_groups(connection, rules, config):
 
         if source_changed or inactive:
             flush()
+            brute_state = None
+            correlation_state = None
+
+        if brute_rule is not None:
+            if brute_state is None:
+                settings = getattr(config, brute_rule.config_key)
+                brute_state = SSHBruteForceState(
+                    hostname,
+                    source_ip,
+                    threshold=settings.threshold,
+                    window_minutes=settings.window_minutes,
+                )
+
+            if event.event_type in FAILED_TYPES and event.outcome == "failure":
+                finding = brute_state.process(event)
+                if finding is not None:
+                    findings.append(finding)
+
+        if correlation_rule is not None:
+            if correlation_state is None:
+                settings = getattr(config, correlation_rule.config_key)
+                correlation_state = SSHSuccessCorrelationState(
+                    hostname,
+                    source_ip,
+                    threshold=settings.threshold,
+                    window_minutes=settings.window_minutes,
+                )
+
+            finding = correlation_state.process(event)
+            if finding is not None:
+                findings.append(finding)
+
+        if other_rules:
+            group.append(event)
 
         current_key = key
         last_timestamp = event.timestamp
-        group.append(event)
 
     flush()
     return findings
