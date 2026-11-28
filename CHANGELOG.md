@@ -1,6 +1,31 @@
 # Changelog
 
-## [0.5.0] - Unreleased
+## [0.6.0] - 2026-11-28
+
+### Added
+- SSH brute-force detection.
+- SSH login success after repeated failures detection.
+- SSH password spraying detection.
+- Suspicious auditd remote script execution detection.
+- YAML-based detection configuration.
+- Central detection rule registry.
+- SQLite security finding storage and inspection.
+- Finding-to-event evidence reference checks.
+
+### Improved
+- Disk-backed SSH event grouping.
+- Batch-based auditd detection processing.
+- Stateful SSH brute-force and login correlation.
+- SSH inactivity-gap processing.
+- Automated security and regression testing.
+
+### Limitations
+- Detection rules cover selected suspicious behaviors.
+- Dense SSH event groups may still increase memory usage.
+- Detection findings require analyst verification.
+
+
+## [0.5.0] - Released
 
 ### Added
 - Syslog, Kernel, and Cron log collectors.

@@ -317,7 +317,7 @@ def detect_run_command(
         typer.Option("--config", help="YAML detection configuration."),
     ] = None,
 ):
-    """Run all enabled SSH detection rules."""
+    """Run all enabled SSH and auditd detection rules."""
 
     from linuxtrace.detection.config import load_detection_config
     from linuxtrace.detection.registry import get_registered_rules
