@@ -6,6 +6,8 @@ import typer
 from rich.console import Console
 
 from linuxtrace import __version__
+from linuxtrace.detection.cli import register_detection_commands
+from linuxtrace.detection.findings_cli import register_findings_commands
 from linuxtrace.doctor import run_doctor
 from linuxtrace.storage.database import Database
 from linuxtrace.storage.event_group_query import EventGroupQuery
@@ -22,6 +24,9 @@ app = typer.Typer(
 )
 
 console = Console()
+
+register_detection_commands(app)
+register_findings_commands(app)
 
 
 @app.callback()
